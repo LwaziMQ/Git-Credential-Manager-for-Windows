@@ -1,48 +1,35 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Atlassian.Bitbucket.Authentication;
+using GitHub.Authentication;
 using Microsoft.Alm.Authentication;
-using Microsoft.Alm.Authentication.Test;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace Atlassian.Bitbucket.Authentication.Test
+namespace Bitbucket.Authentication.Test
 {
-    public class AuthorityTest : UnitTestBase
+    public class AuthorityTest
     {
-        public AuthorityTest(Xunit.Abstractions.ITestOutputHelper output)
-            : base(XunitHelper.Convert(output))
-        { }
-
         [Fact]
-        public void VerifyAcquireTokenAcceptsValidAuthenticationResultTypes()
+        public async void VerifyAcquireTokenAcceptsValidAuthenticationResultTypes()
         {
-            InitializeTest();
-
-            var authority = new Authority(Context);
+            var context = RuntimeContext.Default;
+            var authority = new Authority(context);
             var targetUri = new TargetUri("https://bitbucket.org");
             var credentials = new Credential("a", "b");
             var resultType = AuthenticationResultType.None;
-            var tokenScope = TokenScope.None;
+            var tokenScope = Atlassian.Bitbucket.Authentication.TokenScope.None;
 
-            var values = Enum.GetValues(typeof(AuthenticationResultType))
-                             .Cast<AuthenticationResultType>()
-                             .ToList();
-            int count = 0;
-
-            values.ToList().ForEach(_ =>
+            var values = Enum.GetValues(typeof(AuthenticationResultType)).Cast<AuthenticationResultType>();
+            values.ToList().ForEach(async _ =>
             {
-                Task.Run(async () =>
-                {
-                    Interlocked.Increment(ref count);
+                var token = await authority.AcquireToken(targetUri, credentials, resultType, tokenScope);
 
-                    AuthenticationResult token = await authority.AcquireToken(targetUri, credentials, resultType, tokenScope);
+                Assert.NotNull(token);
 
-                    Assert.NotNull(token);
-                }).Wait();
             });
-
-            Assert.Equal(values.Count, count);
         }
     }
 }

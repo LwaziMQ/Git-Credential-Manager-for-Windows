@@ -28,7 +28,7 @@ namespace Atlassian.Bitbucket.Authentication.Rest
             };
 
             var apiUrl = new Uri(restRootUrl, UserUrl);
-            var requestUri = targetUri.CreateWith(apiUrl);
+            var requestUri = new TargetUri(apiUrl, targetUri.ProxyUri);
 
             using (var response = await Network.HttpGetAsync(requestUri, options))
             {
@@ -42,7 +42,7 @@ namespace Atlassian.Bitbucket.Authentication.Rest
                             Trace.WriteLine("authentication success: new password token created.");
 
                             // Get username to cross check against supplied one
-                            var responseText = response.Content.AsString;
+                            var responseText = await response.Content.ReadAsStringAsync();
                             var username = FindUsername(responseText);
                             return new AuthenticationResult(AuthenticationResultType.Success, username);
                         }

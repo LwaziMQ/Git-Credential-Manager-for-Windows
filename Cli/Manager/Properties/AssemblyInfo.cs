@@ -11,14 +11,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © Microsoft Corporation 2018. All rights reserved.")]
 [assembly: AssemblyTrademark("Microsoft Corporation")]
 [assembly: AssemblyCulture("")]
-[assembly: Guid("19770407-63d4-0415-a9df-f1c4b473308a")]
-[assembly: AssemblyVersion("1.20.0.0")]
-[assembly: AssemblyFileVersion("1.20.0.0")]
+[assembly: Guid("62f52119-63d4-40a8-a9df-f1c4b473308a")]
+[assembly: AssemblyVersion("1.16.3.0")]
+[assembly: AssemblyFileVersion("1.16.3.0")]
 [assembly: NeutralResourcesLanguage("en-US")]
-
-// Only expose internals when the binary isn't signed.
-#if !SIGNED
-[assembly: InternalsVisibleTo("Microsoft.Alm.Cli.Proxy")]
-[assembly: InternalsVisibleTo("Microsoft.Alm.Cli.Test")]
+[assembly: InternalsVisibleTo("Microsoft.Alm.CredentialHelper.Test")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-#endif
